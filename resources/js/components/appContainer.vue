@@ -10,7 +10,7 @@
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                     <ul class="navbar-nav navbar-nav ml-auto mt-lg-0">
                         <li class="nav-item active my-2 my-lg-0">
-                            <a class="nav-link my-2 my-sm-0" @click="logout" style="cursor: pointer">Logout</a>
+                            <a class="nav-link my-2 my-sm-0" @click="logout" style="cursor: pointer">Logout - {{ currentUser.name }}</a>
                         </li>
                     </ul>
                 </div>
@@ -23,10 +23,27 @@
 export default {
     methods: {
         logout() {
-            axios.post('/logout')
-            .then(response => {
-                window.location.href = "login"
-            });
+            this.$store.dispatch('currentUser/logoutUser')
+        }
+    },
+    computed: {
+        loggedIn: {
+            get() {
+                return this.$store.state.currentUser.loggedIn;
+            }
+        },
+        currentUser: {
+            get() {
+                return this.$store.state.currentUser.user;
+            }
+        }
+    },
+    created() {
+        if(localStorage.hasOwnProperty("user_token")) {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("user_token");
+            this.$store.dispatch('currentUser/getUser');
+        } else {
+            window.location.replace("/login");
         }
     }
 }

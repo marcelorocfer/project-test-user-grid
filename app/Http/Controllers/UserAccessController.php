@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserAccessController extends Controller
 {
@@ -19,6 +20,11 @@ class UserAccessController extends Controller
         $users = $this->user->with('access')->paginate(6000);
 
         return UserResource::collection($users);
+    }
+
+    public function currentUser()
+    {
+        return Auth::user();
     }
 
 }

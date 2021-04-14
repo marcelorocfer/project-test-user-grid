@@ -18,4 +18,5 @@ Route::get('/user', 'UserAccessController@index')->name('user_access');
 
 Route::prefix('/user')->group(function() {
     Route::post('/login', 'LoginController@login');
+    Route::middleware('auth:api')->get('/current', 'UserAccessController@currentUser');
 });
